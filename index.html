@@ -1,40 +1,457 @@
-atabase));
-  updateStats();
-}
-
-function updateStats() {
-  document.getElementById('totalCount').textContent = database.length;
-}
-
-funcent = "") {
-  const txt = document.getElementById('searchTxt').value.toLowerCase();
-  const dimTxt = document.getElementById('searchDim').value.replace(/[^0-9.]/g, " ").trim();
-  const dimParts = dimTxt.split(/\s+/).filter(x => x);
-
-  const filtered = database.filter(item => {
-    const content = `${item.client} ${item.desc} ${item.code} ${item.remarks}`.toLowerCase();
-    const matchText = content.includes(txt);
-    
-    let matchDim = true;
-    if (dimParts.length > 0) {
-      const itemDims = item.dim.replace(/[^0-9.]/g, " ").split(" ").map(Number);
-      matchDim = dimParts.every(p => itemDims.some(d => Math.abs(d - p) < 0.5));
-    }
-
-    const matchClient = filterClient ? item.client === filterClient : true;
-    return matchText && matchDim && matchClient;
-  });
-
-  const container = document.getElementById('mainList');
-  
-  if (filtered.length === 0) {
-    container.innerHTML = `<div class="empty-state">${database.length === 0 ? 'Κάνε Import CSV για να ξεκινήσεις!' : 'Δεν βρέθηκαν αποτελέσματα'}</div>`;
-    return;
+<!DOCTYPE html>
+<html lang="el">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ταξίδι στα Αστέρια ✨</title>
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
   }
 
-  container.innerHTML = filtered.slice(0, 100).map(item => `
-    <div class="card">
-      <div class="card-header">
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(to bottom, #0a0e27 0%, #1a1535 50%, #2d1b4e 100%);
+    color: #ffffff;
+    overflow-x: hidden;
+    line-height: 1.6;
+  }
+
+  /* Animated Stars Background */
+  .stars {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .star {
+    position: absolute;
+    background: white;
+    border-radius: 50%;
+    animation: twinkle 3s infinite;
+  }
+
+  @keyframes twinkle {
+    0%, 100% { opacity: 0.3; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.2); }
+  }
+
+  /* Header */
+  header {
+    position: relative;
+    text-align: center;
+    padding: 100px 20px;
+    background: linear-gradient(135deg, rgba(138, 43, 226, 0.3), rgba(75, 0, 130, 0.3));
+    backdrop-filter: blur(10px);
+    border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+  }
+
+  h1 {
+    font-size: 4em;
+    font-weight: 900;
+    background: linear-gradient(135deg, #ffd700, #ffeb3b, #00d4ff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 20px;
+    text-shadow: 0 0 30px rgba(255, 215, 0, 0.5);
+    animation: glow 2s ease-in-out infinite;
+  }
+
+  @keyframes glow {
+    0%, 100% { filter: drop-shadow(0 0 20px rgba(255, 215, 0, 0.5)); }
+    50% { filter: drop-shadow(0 0 40px rgba(255, 215, 0, 0.8)); }
+  }
+
+  .subtitle {
+    font-size: 1.3em;
+    color: #b8c5d6;
+    margin-top: 10px;
+  }
+
+  /* Navigation */
+  nav {
+    position: sticky;
+    top: 0;
+    background: rgba(10, 14, 39, 0.95);
+    backdrop-filter: blur(20px);
+    padding: 15px 0;
+    z-index: 100;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  nav ul {
+    list-style: none;
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    flex-wrap: wrap;
+  }
+
+  nav a {
+    color: #ffffff;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1.1em;
+    padding: 10px 20px;
+    border-radius: 25px;
+    transition: all 0.3s ease;
+  }
+
+  nav a:hover {
+    background: linear-gradient(135deg, #6a00ff, #00d4ff);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(106, 0, 255, 0.5);
+  }
+
+  /* Main Content */
+  main {
+    position: relative;
+    z-index: 1;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 60px 20px;
+  }
+
+  section {
+    margin-bottom: 80px;
+    background: rgba(26, 21, 53, 0.6);
+    backdrop-filter: blur(10px);
+    padding: 50px;
+    border-radius: 30px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+  }
+
+  h2 {
+    font-size: 2.5em;
+    margin-bottom: 30px;
+    background: linear-gradient(135deg, #00d4ff, #ffd700);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    display: inline-block;
+  }
+
+  h2::before {
+    content: '⭐ ';
+    margin-right: 10px;
+  }
+
+  p {
+    font-size: 1.2em;
+    color: #d0d8e6;
+    margin-bottom: 20px;
+  }
+
+  /* Star Cards */
+  .star-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+    margin-top: 40px;
+  }
+
+  .star-card {
+    background: linear-gradient(135deg, rgba(106, 0, 255, 0.2), rgba(0, 212, 255, 0.2));
+    padding: 30px;
+    border-radius: 20px;
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.3s ease;
+    cursor: pointer;
+  }
+
+  .star-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 50px rgba(106, 0, 255, 0.5);
+    border-color: rgba(255, 215, 0, 0.5);
+  }
+
+  .star-card h3 {
+    font-size: 1.8em;
+    color: #ffd700;
+    margin-bottom: 15px;
+  }
+
+  .star-card .emoji {
+    font-size: 3em;
+    margin-bottom: 15px;
+    display: block;
+  }
+
+  /* Fun Facts */
+  .fact-box {
+    background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(255, 105, 180, 0.1));
+    padding: 25px;
+    border-radius: 15px;
+    border-left: 5px solid #ffd700;
+    margin: 20px 0;
+  }
+
+  .fact-box strong {
+    color: #ffd700;
+    font-size: 1.1em;
+  }
+
+  /* Interactive Elements */
+  .constellation {
+    text-align: center;
+    padding: 40px;
+    margin: 40px 0;
+  }
+
+  .constellation-art {
+    font-size: 5em;
+    animation: rotate 10s linear infinite;
+  }
+
+  @keyframes rotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+
+  /* Footer */
+  footer {
+    text-align: center;
+    padding: 40px 20px;
+    background: rgba(0, 0, 0, 0.5);
+    margin-top: 60px;
+    border-top: 2px solid rgba(255, 255, 255, 0.1);
+  }
+
+  footer p {
+    color: #8b95a8;
+    font-size: 1em;
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    h1 {
+      font-size: 2.5em;
+    }
+
+    h2 {
+      font-size: 2em;
+    }
+
+    section {
+      padding: 30px 20px;
+    }
+
+    nav ul {
+      gap: 15px;
+    }
+  }
+</style>
+</head>
+<body>
+
+<!-- Animated Stars -->
+<div class="stars" id="starsContainer"></div>
+
+<!-- Header -->
+<header>
+  <h1>✨ Ταξίδι στα Αστέρια ✨</h1>
+  <p class="subtitle">Ανακαλύψτε τα μυστικά του σύμπαντος</p>
+</header>
+
+<!-- Navigation -->
+<nav>
+  <ul>
+    <li><a href="#what-are">Τι είναι τα Αστέρια</a></li>
+    <li><a href="#types">Είδη Αστεριών</a></li>
+    <li><a href="#facts">Ενδιαφέροντα</a></li>
+    <li><a href="#constellations">Αστερισμοί</a></li>
+  </ul>
+</nav>
+
+<!-- Main Content -->
+<main>
+  
+  <!-- What Are Stars -->
+  <section id="what-are">
+    <h2>Τι είναι τα Αστέρια;</h2>
+    <p>
+      Τα αστέρια είναι τεράστιες, φωτεινές σφαίρες από πυρακτωμένο αέριο που βρίσκονται στο διάστημα. 
+      Το πιο κοντινό αστέρι στη Γη είναι ο Ήλιος μας, που απέχει περίπου 150 εκατομμύρια χιλιόμετρα!
+    </p>
+    <p>
+      Τα αστέρια παράγουν τη δική τους ενέργεια μέσω μιας διαδικασίας που ονομάζεται πυρηνική σύντηξη, 
+      όπου άτομα υδρογόνου ενώνονται για να δημιουργήσουν ήλιο, απελευθερώνοντας τεράστιες ποσότητες ενέργειας.
+    </p>
+    
+    <div class="fact-box">
+      <strong>🌟 Γνωρίζατε ότι:</strong> Ο Ήλιος μας είναι ένα αστέρι μέσου μεγέθους και περιέχει το 99,86% 
+      της συνολικής μάζας του ηλιακού μας συστήματος!
+    </div>
+  </section>
+
+  <!-- Types of Stars -->
+  <section id="types">
+    <h2>Είδη Αστεριών</h2>
+    <p>Τα αστέρια διαφέρουν σε μέγεθος, θερμοκρασία, χρώμα και φωτεινότητα. Ας δούμε τα πιο ενδιαφέροντα:</p>
+    
+    <div class="star-grid">
+      <div class="star-card">
+        <span class="emoji">🔴</span>
+        <h3>Κόκκινοι Νάνοι</h3>
+        <p>Τα μικρότερα και ψυχρότερα αστέρια. Μπορούν να ζήσουν τρισεκατομμύρια χρόνια!</p>
+      </div>
+
+      <div class="star-card">
+        <span class="emoji">☀️</span>
+        <h3>Κίτρινοι Νάνοι</h3>
+        <p>Όπως ο Ήλιος μας! Σταθερά και μέτριου μεγέθους αστέρια με θερμοκρασία γύρω στους 6.000°C.</p>
+      </div>
+
+      <div class="star-card">
+        <span class="emoji">🔵</span>
+        <h3>Μπλε Γίγαντες</h3>
+        <p>Τεράστια και πολύ θερμά αστέρια με θερμοκρασίες άνω των 30.000°C!</p>
+      </div>
+
+      <div class="star-card">
+        <span class="emoji">🔴</span>
+        <h3>Κόκκινοι Υπεργίγαντες</h3>
+        <p>Τα μεγαλύτερα αστέρια! Η Betelgeuse θα μπορούσε να φτάσει μέχρι τον Άρη αν ήταν στη θέση του Ήλιου.</p>
+      </div>
+
+      <div class="star-card">
+        <span class="emoji">⚪</span>
+        <h3>Λευκοί Νάνοι</h3>
+        <p>Το τελικό στάδιο αστεριών σαν τον Ήλιο. Πυκνά και πολύ θερμά υπολείμματα.</p>
+      </div>
+
+      <div class="star-card">
+        <span class="emoji">⚫</span>
+        <h3>Μαύρες Τρύπες</h3>
+        <p>Όταν ένα τεράστιο αστέρι καταρρέει, μπορεί να δημιουργήσει μια μαύρη τρύπα!</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Interesting Facts -->
+  <section id="facts">
+    <h2>Απίστευτα Γεγονότα</h2>
+    
+    <div class="fact-box">
+      <strong>💫 Πόσα αστέρια υπάρχουν;</strong>
+      <p>Υπολογίζεται ότι υπάρχουν περισσότερα από 200 δισεκατομμύρια τρισεκατομμύρια (200.000.000.000.000.000.000.000) 
+      αστέρια στο σύμπαν! Περισσότερα από τους κόκκους άμμου σε όλες τις παραλίες της Γης!</p>
+    </div>
+
+    <div class="fact-box">
+      <strong>⏰ Ταξίδι στο χρόνο</strong>
+      <p>Όταν κοιτάμε τα αστέρια, βλέπουμε στο παρελθόν! Το φως χρειάζεται χρόνο να ταξιδέψει, 
+      οπότε βλέπουμε τα αστέρια όπως ήταν πριν από εκατοντάδες ή χιλιάδες χρόνια.</p>
+    </div>
+
+    <div class="fact-box">
+      <strong>🎂 Ηλικία αστεριών</strong>
+      <p>Ο Ήλιος μας είναι περίπου 4,6 δισεκατομμυρίων ετών και βρίσκεται στη μέση της ζωής του. 
+      Έχει άλλα 5 δισεκατομμύρια χρόνια πριν γίνει κόκκινος γίγαντας!</p>
+    </div>
+
+    <div class="fact-box">
+      <strong>💎 Διαμαντένιοι κόσμοι</strong>
+      <p>Κάποιοι λευκοί νάνοι έχουν πυρήνες από κρυσταλλωμένο άνθρακα - δηλαδή διαμάντια μεγέθους πλανήτη!</p>
+    </div>
+
+    <div class="fact-box">
+      <strong>🌈 Χρώματα αστεριών</strong>
+      <p>Τα αστέρια έχουν διαφορετικά χρώματα ανάλογα με τη θερμοκρασία τους: 
+      Κόκκινα (ψυχρά), Κίτρινα (μέτρια), Λευκά (θερμά), Μπλε (πολύ θερμά)!</p>
+    </div>
+  </section>
+
+  <!-- Constellations -->
+  <section id="constellations">
+    <h2>Αστερισμοί - Σχέδια στον Ουρανό</h2>
+    <p>
+      Οι άνθρωποι από την αρχαιότητα συνέδεαν τα αστέρια σε σχήματα που ονόμαζαν αστερισμούς. 
+      Υπάρχουν 88 επίσημοι αστερισμοί που αναγνωρίζονται σήμερα!
+    </p>
+
+    <div class="constellation">
+      <div class="constellation-art">✨🌟⭐💫✨</div>
+      <h3 style="color: #ffd700; margin-top: 20px;">Μεγάλη Άρκτος (Αρκτούρος)</h3>
+      <p>Ένας από τους πιο αναγνωρίσιμους αστερισμούς στο βόρειο ημισφαίριο!</p>
+    </div>
+
+    <div class="star-grid">
+      <div class="star-card">
+        <span class="emoji">♈</span>
+        <h3>Ζώδια</h3>
+        <p>Οι 12 αστερισμοί κατά μήκος της εκλειπτικής που χρησιμοποιούνται στην αστρολογία.</p>
+      </div>
+
+      <div class="star-card">
+        <span class="emoji">🦂</span>
+        <h3>Σκορπιός</h3>
+        <p>Ένας εντυπωσιακός αστερισμός που μοιάζει πραγματικά με σκορπιό!</p>
+      </div>
+
+      <div class="star-card">
+        <span class="emoji">🦁</span>
+        <h3>Λέων</h3>
+        <p>Ένας από τους πιο εύκολα αναγνωρίσιμους αστερισμούς την άνοιξη.</p>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- Footer -->
+<footer>
+  <p>✨ Συνέχισε να κοιτάς τα αστέρια και να ονειρεύεσαι! ✨</p>
+  <p style="margin-top: 10px; font-size: 0.9em;">
+    "Είμαστε φτιαγμένοι από αστρική σκόνη" - Carl Sagan
+  </p>
+</footer>
+
+<script>
+// Create animated stars
+function createStars() {
+  const container = document.getElementById('starsContainer');
+  const starCount = 200;
+
+  for (let i = 0; i < starCount; i++) {
+    const star = document.createElement('div');
+    star.className = 'star';
+    
+    const size = Math.random() * 3 + 1;
+    star.style.width = size + 'px';
+    star.style.height = size + 'px';
+    star.style.left = Math.random() * 100 + '%';
+    star.style.top = Math.random() * 100 + '%';
+    star.style.animationDelay = Math.random() * 3 + 's';
+    star.style.animationDuration = (Math.random() * 3 + 2) + 's';
+    
+    container.appendChild(star);
+  }
+}
+
+// Smooth scroll for navigation
+document.querySelectorAll('nav a').forEach(anchor => {
+  anchor.addEventListener('click', function(e) {
+    e.preventDefault();
+    const targetId = this.getAttribute('href');
+    const targetSection = document.querySelector(targetId);
+    targetSection.scrollIntoView({ behavior: 'smooth' });
+  });
+});
+
+// Initialize stars
+createStars();
+</script>
+
+</body>
+</html>      <div class="card-header">
         <span class="client">${item.client}</span>
         <button class="edit-btn" onclick="editItem('${item.id}')">✏️</button>
       </div>
