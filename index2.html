@@ -1,462 +1,457 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ταξίδι στα Αστέρια ✨</title>
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
   }
 
-  body::before {
-    content: '';
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(to bottom, #0a0e27 0%, #1a1535 50%, #2d1b4e 100%);
+    color: #ffffff;
+    overflow-x: hidden;
+    line-height: 1.6;
+  }
+
+  /* Animated Stars Background */
+  .stars {
     position: fixed;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
-    background: radial-gradient(circle, rgba(255, 214, 10, 0.03) 1px, transparent 1px);
-    background-size: 50px 50px;
-    animation: bgMove 20s linear infinite;
-    z-index: 0;
-    pointer-events: none;
-  }
-
-  @keyframes bgMove {
-    0% { transform: translate(0, 0); }
-    100% { transform: translate(50px, 50px); }
-  }
-
-  .header {
-    background: rgba(26, 31, 58, 0.95);
-    backdrop-filter: blur(20px);
-    padding: 20px 20px 16px;
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
-    border-bottom: 1px solid var(--border);
-  }
-
-  .top-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-  }
-
-  .app-title {
-    font-size: 24px;
-    font-weight: 800;
-    background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    letter-spacing: -0.5px;
-  }
-
-  .logo-icon {
-    font-size: 28px;
-    filter: drop-shadow(0 0 10px var(--primary-glow));
-  }
-
-  .count-badge {
-    background: linear-gradient(135deg, var(--accent) 0%, #0099cc 100%);
-    font-size: 13px;
-    font-weight: 700;
-    padding: 6px 14px;
-    border-radius: 20px;
-    color: white;
-    box-shadow: 0 4px 15px var(--accent-glow);
-    animation: pulse 2s ease-in-out infinite;
-  }
-
-  @keyframes pulse {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.05); }
-  }
-
-  .inputs-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
-    margin-bottom: 16px;
-  }
-  
-  .input-wrapper {
-    position: relative;
-  }
-
-  .input-icon {
-    position: absolute;
-    left: 14px;
-    top: 50%;
-    transform: translateY(-50%);
-    font-size: 18px;
-    color: var(--text-dim);
-    pointer-events: none;
-  }
-
-  input {
-    background: rgba(255, 255, 255, 0.05);
-    border: 2px solid var(--border);
-    color: white;
-    padding: 14px 14px 14px 45px;
-    border-radius: 14px;
-    font-size: 15px;
-    width: 100%;
-    transition: all 0.3s ease;
-    font-weight: 500;
-  }
-  
-  input:focus { 
-    border-color: var(--accent); 
-    background: rgba(255, 255, 255, 0.08);
-    box-shadow: 0 0 20px var(--accent-glow);
-    transform: translateY(-2px);
-  }
-
-  input::placeholder {
-    color: var(--text-dim);
-  }
-
-  .tools {
-    display: flex;
-    gap: 10px;
-    overflow-x: auto;
-    padding-bottom: 8px;
-    scrollbar-width: thin;
-    scrollbar-color: var(--accent) transparent;
-  }
-
-  .tools::-webkit-scrollbar {
-    height: 6px;
-  }
-
-  .tools::-webkit-scrollbar-track {
-    background: rgba(255, 255, 255, 0.05);
-    border-radius: 10px;
-  }
-
-  .tools::-webkit-scrollbar-thumb {
-    background: var(--accent);
-    border-radius: 10px;
-  }
-
-  .chip {
-    background: rgba(255, 255, 255, 0.06);
-    border: 2px solid transparent;
-    color: var(--text-dim);
-    padding: 10px 18px;
-    border-radius: 25px;
-    font-size: 13px;
-    font-weight: 600;
-    white-space: nowrap;
-    cursor: pointer;
-    transition: all 0.3s ease;
-  }
-
-  .chip:hover {
-    background: rgba(255, 255, 255, 0.1);
-    transform: translateY(-2px);
-  }
-
-  .chip.active { 
-    background: linear-gradient(135deg, var(--accent) 0%, #0099cc 100%);
-    border-color: var(--accent);
-    color: white;
-    box-shadow: 0 4px 15px var(--accent-glow);
-  }
-
-  .list-container {
-    padding: 24px 16px;
-    display: grid;
-    gap: 16px;
-    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
-    position: relative;
-    z-index: 1;
-  }
-
-  .card {
-    background: linear-gradient(135deg, rgba(26, 31, 58, 0.9) 0%, rgba(20, 25, 45, 0.9) 100%);
-    backdrop-filter: blur(10px);
-    border-radius: 16px;
-    padding: 20px;
-    position: relative;
-    border: 1px solid var(--border);
-    box-shadow: var(--shadow);
-    transition: all 0.3s ease;
-    overflow: hidden;
-  }
-
-  .card::before {
-    content: '';
-    position: absolute;
     top: 0;
     left: 0;
-    right: 0;
-    height: 4px;
-    background: linear-gradient(90deg, var(--primary) 0%, var(--accent) 100%);
-    opacity: 0;
-    transition: opacity 0.3s ease;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 0;
   }
 
-  .card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
-    border-color: rgba(255, 255, 255, 0.2);
-  }
-
-  .card:hover::before {
-    opacity: 1;
-  }
-
-  .card-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 12px;
-  }
-
-  .client {
-    font-size: 11px;
-    font-weight: 800;
-    text-transform: uppercase;
-    color: var(--accent);
-    letter-spacing: 1px;
-    padding: 4px 10px;
-    background: var(--accent-glow);
-    border-radius: 6px;
-    border: 1px solid rgba(0, 217, 255, 0.3);
-  }
-
-  .code-section {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 14px;
-    gap: 12px;
-  }
-
-  .rubber-code {
-    background: linear-gradient(135deg, var(--primary) 0%, #ffaa00 100%);
-    color: #000;
-    font-size: 26px;
-    font-weight: 900;
-    padding: 10px 18px;
-    border-radius: 12px;
-    min-width: 70px;
-    text-align: center;
-    box-shadow: 0 4px 20px var(--primary-glow);
-    letter-spacing: 1px;
-    flex-shrink: 0;
-  }
-
-  .empty-code {
-    background: rgba(255, 255, 255, 0.08);
-    color: var(--text-dim);
-    font-size: 18px;
-    box-shadow: none;
-  }
-
-  .desc {
-    font-size: 15px;
-    font-weight: 600;
-    color: #fff;
-    line-height: 1.4;
-    flex: 1;
-  }
-
-  .details-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: 12px;
-    padding-top: 12px;
-    border-top: 1px solid var(--border);
-    gap: 10px;
-  }
-
-  .dims {
-    font-family: 'Courier New', monospace;
-    font-size: 14px;
-    color: var(--success);
-    font-weight: 700;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    padding: 6px 12px;
-    background: rgba(0, 255, 136, 0.1);
-    border-radius: 8px;
-    border: 1px solid rgba(0, 255, 136, 0.2);
-  }
-
-  .pl-code {
-    font-size: 12px;
-    color: var(--text-dim);
-    font-style: italic;
-    max-width: 140px;
-    text-align: right;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-
-  .edit-btn {
-    background: rgba(255, 255, 255, 0.08);
-    border: 1px solid var(--border);
-    color: var(--text-dim);
-    cursor: pointer;
-    font-size: 18px;
-    padding: 8px 12px;
-    border-radius: 10px;
-    transition: all 0.3s ease;
-  }
-
-  .edit-btn:hover { 
-    background: var(--primary);
-    color: #000;
-    transform: rotate(15deg) scale(1.1);
-    box-shadow: 0 4px 15px var(--primary-glow);
-  }
-
-  .fab {
-    position: fixed;
-    bottom: 30px;
-    right: 30px;
-    background: linear-gradient(135deg, var(--primary) 0%, #ffaa00 100%);
-    color: #000;
-    width: 64px;
-    height: 64px;
+  .star {
+    position: absolute;
+    background: white;
     border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 28px;
-    font-weight: 700;
-    box-shadow: 0 8px 30px var(--primary-glow);
-    border: none;
-    cursor: pointer;
-    z-index: 1000;
-    transition: all 0.3s ease;
+    animation: twinkle 3s infinite;
   }
 
-  .fab:hover {
-    transform: scale(1.15) rotate(90deg);
-    box-shadow: 0 12px 40px var(--primary-glow);
+  @keyframes twinkle {
+    0%, 100% { opacity: 0.3; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.2); }
   }
 
-  .fab:active {
-    transform: scale(0.95) rotate(90deg);
-  }
-
-  .excel-btn {
-    background: linear-gradient(135deg, #00c853 0%, #00a843 100%);
-    border: none;
-    color: white;
-    padding: 10px 18px;
-    border-radius: 12px;
-    font-size: 14px;
-    font-weight: 700;
-    cursor: pointer;
-    box-shadow: 0 4px 15px rgba(0, 200, 83, 0.3);
-    transition: all 0.3s ease;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-  }
-
-  .excel-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(0, 200, 83, 0.4);
-  }
-
-  .empty-state {
-    grid-column: 1/-1;
+  /* Header */
+  header {
+    position: relative;
     text-align: center;
-    padding: 60px 20px;
-    color: var(--text-dim);
-    font-size: 16px;
+    padding: 100px 20px;
+    background: linear-gradient(135deg, rgba(138, 43, 226, 0.3), rgba(75, 0, 130, 0.3));
+    backdrop-filter: blur(10px);
+    border-bottom: 2px solid rgba(255, 255, 255, 0.1);
   }
 
-  .empty-state::before {
-    content: '🔍';
-    display: block;
-    font-size: 64px;
+  h1 {
+    font-size: 4em;
+    font-weight: 900;
+    background: linear-gradient(135deg, #ffd700, #ffeb3b, #00d4ff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
     margin-bottom: 20px;
-    opacity: 0.5;
+    text-shadow: 0 0 30px rgba(255, 215, 0, 0.5);
+    animation: glow 2s ease-in-out infinite;
   }
 
+  @keyframes glow {
+    0%, 100% { filter: drop-shadow(0 0 20px rgba(255, 215, 0, 0.5)); }
+    50% { filter: drop-shadow(0 0 40px rgba(255, 215, 0, 0.8)); }
+  }
+
+  .subtitle {
+    font-size: 1.3em;
+    color: #b8c5d6;
+    margin-top: 10px;
+  }
+
+  /* Navigation */
+  nav {
+    position: sticky;
+    top: 0;
+    background: rgba(10, 14, 39, 0.95);
+    backdrop-filter: blur(20px);
+    padding: 15px 0;
+    z-index: 100;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  nav ul {
+    list-style: none;
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    flex-wrap: wrap;
+  }
+
+  nav a {
+    color: #ffffff;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1.1em;
+    padding: 10px 20px;
+    border-radius: 25px;
+    transition: all 0.3s ease;
+  }
+
+  nav a:hover {
+    background: linear-gradient(135deg, #6a00ff, #00d4ff);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(106, 0, 255, 0.5);
+  }
+
+  /* Main Content */
+  main {
+    position: relative;
+    z-index: 1;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 60px 20px;
+  }
+
+  section {
+    margin-bottom: 80px;
+    background: rgba(26, 21, 53, 0.6);
+    backdrop-filter: blur(10px);
+    padding: 50px;
+    border-radius: 30px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+  }
+
+  h2 {
+    font-size: 2.5em;
+    margin-bottom: 30px;
+    background: linear-gradient(135deg, #00d4ff, #ffd700);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    display: inline-block;
+  }
+
+  h2::before {
+    content: '⭐ ';
+    margin-right: 10px;
+  }
+
+  p {
+    font-size: 1.2em;
+    color: #d0d8e6;
+    margin-bottom: 20px;
+  }
+
+  /* Star Cards */
+  .star-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+    margin-top: 40px;
+  }
+
+  .star-card {
+    background: linear-gradient(135deg, rgba(106, 0, 255, 0.2), rgba(0, 212, 255, 0.2));
+    padding: 30px;
+    border-radius: 20px;
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.3s ease;
+    cursor: pointer;
+  }
+
+  .star-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 50px rgba(106, 0, 255, 0.5);
+    border-color: rgba(255, 215, 0, 0.5);
+  }
+
+  .star-card h3 {
+    font-size: 1.8em;
+    color: #ffd700;
+    margin-bottom: 15px;
+  }
+
+  .star-card .emoji {
+    font-size: 3em;
+    margin-bottom: 15px;
+    display: block;
+  }
+
+  /* Fun Facts */
+  .fact-box {
+    background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(255, 105, 180, 0.1));
+    padding: 25px;
+    border-radius: 15px;
+    border-left: 5px solid #ffd700;
+    margin: 20px 0;
+  }
+
+  .fact-box strong {
+    color: #ffd700;
+    font-size: 1.1em;
+  }
+
+  /* Interactive Elements */
+  .constellation {
+    text-align: center;
+    padding: 40px;
+    margin: 40px 0;
+  }
+
+  .constellation-art {
+    font-size: 5em;
+    animation: rotate 10s linear infinite;
+  }
+
+  @keyframes rotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+
+  /* Footer */
+  footer {
+    text-align: center;
+    padding: 40px 20px;
+    background: rgba(0, 0, 0, 0.5);
+    margin-top: 60px;
+    border-top: 2px solid rgba(255, 255, 255, 0.1);
+  }
+
+  footer p {
+    color: #8b95a8;
+    font-size: 1em;
+  }
+
+  /* Responsive */
   @media (max-width: 768px) {
-    .list-container {
-      grid-template-columns: 1fr;
-      padding: 16px 12px;
+    h1 {
+      font-size: 2.5em;
     }
 
-    .app-title {
-      font-size: 20px;
+    h2 {
+      font-size: 2em;
     }
 
-    .rubber-code {
-      font-size: 22px;
-      padding: 8px 14px;
+    section {
+      padding: 30px 20px;
+    }
+
+    nav ul {
+      gap: 15px;
     }
   }
 </style>
 </head>
 <body>
 
-<div class="header">
-  <div class="top-row">
-    <div class="app-title">
-      <span class="logo-icon">⚙️</span>
-      Καουτσούκ Ε1
-      <span class="count-badge" id="totalCount">0</span>
-    </div>
-    <div style="display:flex; gap:10px;">
-      <button class="excel-btn" onclick="document.getElementById('csvInput').click()" style="background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);">
-        <span>📤</span>
-        Import
-      </button>
-      <button class="excel-btn" onclick="exportToExcel()">
-        <span>📥</span>
-        Excel
-      </button>
-    </div>
-  </div>
-  <input type="file" id="csvInput" accept=".csv,.txt" style="display:none;" onchange="importCSV(event)">
-  
-  <div class="inputs-grid">
-    <div class="input-wrapper">
-      <span class="input-icon">🔍</span>
-      <input type="text" id="searchTxt" placeholder="Αναζήτηση...">
-    </div>
-    <div class="input-wrapper">
-      <span class="input-icon">📏</span>
-      <input type="text" id="searchDim" placeholder="Διαστάσεις" inputmode="numeric">
-    </div>
-  </div>
-  
-  <div class="tools" id="clientFilters">
-  </div>
-</div>
+<!-- Animated Stars -->
+<div class="stars" id="starsContainer"></div>
 
-<div class="list-container" id="mainList">
-</div>
+<!-- Header -->
+<header>
+  <h1>✨ Ταξίδι στα Αστέρια ✨</h1>
+  <p class="subtitle">Ανακαλύψτε τα μυστικά του σύμπαντος</p>
+</header>
 
-<button class="fab" onclick="addNewItem()">+</button>
+<!-- Navigation -->
+<nav>
+  <ul>
+    <li><a href="#what-are">Τι είναι τα Αστέρια</a></li>
+    <li><a href="#types">Είδη Αστεριών</a></li>
+    <li><a href="#facts">Ενδιαφέροντα</a></li>
+    <li><a href="#constellations">Αστερισμοί</a></li>
+  </ul>
+</nav>
+
+<!-- Main Content -->
+<main>
+  
+  <!-- What Are Stars -->
+  <section id="what-are">
+    <h2>Τι είναι τα Αστέρια;</h2>
+    <p>
+      Τα αστέρια είναι τεράστιες, φωτεινές σφαίρες από πυρακτωμένο αέριο που βρίσκονται στο διάστημα. 
+      Το πιο κοντινό αστέρι στη Γη είναι ο Ήλιος μας, που απέχει περίπου 150 εκατομμύρια χιλιόμετρα!
+    </p>
+    <p>
+      Τα αστέρια παράγουν τη δική τους ενέργεια μέσω μιας διαδικασίας που ονομάζεται πυρηνική σύντηξη, 
+      όπου άτομα υδρογόνου ενώνονται για να δημιουργήσουν ήλιο, απελευθερώνοντας τεράστιες ποσότητες ενέργειας.
+    </p>
+    
+    <div class="fact-box">
+      <strong>🌟 Γνωρίζατε ότι:</strong> Ο Ήλιος μας είναι ένα αστέρι μέσου μεγέθους και περιέχει το 99,86% 
+      της συνολικής μάζας του ηλιακού μας συστήματος!
+    </div>
+  </section>
+
+  <!-- Types of Stars -->
+  <section id="types">
+    <h2>Είδη Αστεριών</h2>
+    <p>Τα αστέρια διαφέρουν σε μέγεθος, θερμοκρασία, χρώμα και φωτεινότητα. Ας δούμε τα πιο ενδιαφέροντα:</p>
+    
+    <div class="star-grid">
+      <div class="star-card">
+        <span class="emoji">🔴</span>
+        <h3>Κόκκινοι Νάνοι</h3>
+        <p>Τα μικρότερα και ψυχρότερα αστέρια. Μπορούν να ζήσουν τρισεκατομμύρια χρόνια!</p>
+      </div>
+
+      <div class="star-card">
+        <span class="emoji">☀️</span>
+        <h3>Κίτρινοι Νάνοι</h3>
+        <p>Όπως ο Ήλιος μας! Σταθερά και μέτριου μεγέθους αστέρια με θερμοκρασία γύρω στους 6.000°C.</p>
+      </div>
+
+      <div class="star-card">
+        <span class="emoji">🔵</span>
+        <h3>Μπλε Γίγαντες</h3>
+        <p>Τεράστια και πολύ θερμά αστέρια με θερμοκρασίες άνω των 30.000°C!</p>
+      </div>
+
+      <div class="star-card">
+        <span class="emoji">🔴</span>
+        <h3>Κόκκινοι Υπεργίγαντες</h3>
+        <p>Τα μεγαλύτερα αστέρια! Η Betelgeuse θα μπορούσε να φτάσει μέχρι τον Άρη αν ήταν στη θέση του Ήλιου.</p>
+      </div>
+
+      <div class="star-card">
+        <span class="emoji">⚪</span>
+        <h3>Λευκοί Νάνοι</h3>
+        <p>Το τελικό στάδιο αστεριών σαν τον Ήλιο. Πυκνά και πολύ θερμά υπολείμματα.</p>
+      </div>
+
+      <div class="star-card">
+        <span class="emoji">⚫</span>
+        <h3>Μαύρες Τρύπες</h3>
+        <p>Όταν ένα τεράστιο αστέρι καταρρέει, μπορεί να δημιουργήσει μια μαύρη τρύπα!</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Interesting Facts -->
+  <section id="facts">
+    <h2>Απίστευτα Γεγονότα</h2>
+    
+    <div class="fact-box">
+      <strong>💫 Πόσα αστέρια υπάρχουν;</strong>
+      <p>Υπολογίζεται ότι υπάρχουν περισσότερα από 200 δισεκατομμύρια τρισεκατομμύρια (200.000.000.000.000.000.000.000) 
+      αστέρια στο σύμπαν! Περισσότερα από τους κόκκους άμμου σε όλες τις παραλίες της Γης!</p>
+    </div>
+
+    <div class="fact-box">
+      <strong>⏰ Ταξίδι στο χρόνο</strong>
+      <p>Όταν κοιτάμε τα αστέρια, βλέπουμε στο παρελθόν! Το φως χρειάζεται χρόνο να ταξιδέψει, 
+      οπότε βλέπουμε τα αστέρια όπως ήταν πριν από εκατοντάδες ή χιλιάδες χρόνια.</p>
+    </div>
+
+    <div class="fact-box">
+      <strong>🎂 Ηλικία αστεριών</strong>
+      <p>Ο Ήλιος μας είναι περίπου 4,6 δισεκατομμυρίων ετών και βρίσκεται στη μέση της ζωής του. 
+      Έχει άλλα 5 δισεκατομμύρια χρόνια πριν γίνει κόκκινος γίγαντας!</p>
+    </div>
+
+    <div class="fact-box">
+      <strong>💎 Διαμαντένιοι κόσμοι</strong>
+      <p>Κάποιοι λευκοί νάνοι έχουν πυρήνες από κρυσταλλωμένο άνθρακα - δηλαδή διαμάντια μεγέθους πλανήτη!</p>
+    </div>
+
+    <div class="fact-box">
+      <strong>🌈 Χρώματα αστεριών</strong>
+      <p>Τα αστέρια έχουν διαφορετικά χρώματα ανάλογα με τη θερμοκρασία τους: 
+      Κόκκινα (ψυχρά), Κίτρινα (μέτρια), Λευκά (θερμά), Μπλε (πολύ θερμά)!</p>
+    </div>
+  </section>
+
+  <!-- Constellations -->
+  <section id="constellations">
+    <h2>Αστερισμοί - Σχέδια στον Ουρανό</h2>
+    <p>
+      Οι άνθρωποι από την αρχαιότητα συνέδεαν τα αστέρια σε σχήματα που ονόμαζαν αστερισμούς. 
+      Υπάρχουν 88 επίσημοι αστερισμοί που αναγνωρίζονται σήμερα!
+    </p>
+
+    <div class="constellation">
+      <div class="constellation-art">✨🌟⭐💫✨</div>
+      <h3 style="color: #ffd700; margin-top: 20px;">Μεγάλη Άρκτος (Αρκτούρος)</h3>
+      <p>Ένας από τους πιο αναγνωρίσιμους αστερισμούς στο βόρειο ημισφαίριο!</p>
+    </div>
+
+    <div class="star-grid">
+      <div class="star-card">
+        <span class="emoji">♈</span>
+        <h3>Ζώδια</h3>
+        <p>Οι 12 αστερισμοί κατά μήκος της εκλειπτικής που χρησιμοποιούνται στην αστρολογία.</p>
+      </div>
+
+      <div class="star-card">
+        <span class="emoji">🦂</span>
+        <h3>Σκορπιός</h3>
+        <p>Ένας εντυπωσιακός αστερισμός που μοιάζει πραγματικά με σκορπιό!</p>
+      </div>
+
+      <div class="star-card">
+        <span class="emoji">🦁</span>
+        <h3>Λέων</h3>
+        <p>Ένας από τους πιο εύκολα αναγνωρίσιμους αστερισμούς την άνοιξη.</p>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- Footer -->
+<footer>
+  <p>✨ Συνέχισε να κοιτάς τα αστέρια και να ονειρεύεσαι! ✨</p>
+  <p style="margin-top: 10px; font-size: 0.9em;">
+    "Είμαστε φτιαγμένοι από αστρική σκόνη" - Carl Sagan
+  </p>
+</footer>
 
 <script>
-// ΚΕΝΗ ΒΑΣΗ - Φόρτωσε δεδομένα με Import CSV!
-let database = [];
-let activeClientFilter = "";
+// Create animated stars
+function createStars() {
+  const container = document.getElementById('starsContainer');
+  const starCount = 200;
 
-function initDB() {
-  const stored = localStorage.getItem('e1_rubber_db_full');
-  if (stored) {
-    database = JSON.parse(stored);
+  for (let i = 0; i < starCount; i++) {
+    const star = document.createElement('div');
+    star.className = 'star';
+    
+    const size = Math.random() * 3 + 1;
+    star.style.width = size + 'px';
+    star.style.height = size + 'px';
+    star.style.left = Math.random() * 100 + '%';
+    star.style.top = Math.random() * 100 + '%';
+    star.style.animationDelay = Math.random() * 3 + 's';
+    star.style.animationDuration = (Math.random() * 3 + 2) + 's';
+    
+    container.appendChild(star);
   }
-  updateStats();
-  renderFilters();
-  renderList();
 }
 
-function saveDB() {
-  localStorage.setItem('e1_rubber_db_full', JSON.stringify(database));
+// Smooth scroll for navigation
+document.querySelectorAll('nav a').forEach(anchor => {
+  anchor.addEventListener('click', function(e) {
+    e.preventDefault();
+    const targetId = this.getAttribute('href');
+    const targetSection = document.querySelector(targetId);
+    targetSection.scrollIntoView({ behavior: 'smooth' });
+  });
+});
+
+// Initialize stars
+createStars();
+</script>
+
+</body>
+</html>atabase));
   updateStats();
 }
 
